@@ -71,7 +71,8 @@ See Shiu Lab ML-Pipeline repository for environment requirements. If working on 
 
 Example run:
 <code><pre>python python /mnt/home/azodichr/GitHub/ML-Pipeline/ML_regression.py -df geno.csv -df_Y pheno.csv,TRAIT -cv_set CVFs.csv  -sep , -alg [ALG] -gs T -plots F -p 5 -save SAVE_NAME -out PATH/TO/OUTPUT</code></pre>
-
+Example runcc file: /mnt/home/azodichr/03_GenomicSelection/rice_DP_Spindel/08_ML2/runcc_GS.txt
+$ python ~shius/codes/qsub_hpc.py -f submit -u [username] -m 40 -w 230 -p 7 -c runcc_GS.txt -wd /mnt/home/azodichr/03_GenomicSelection/rice_DP_Spindel/08_ML2
 
 # 7. Running ML after feature selection
 L1: 
