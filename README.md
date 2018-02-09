@@ -35,7 +35,7 @@ Create two files with matching indexes: geno.csv, pheno.csv
 
 # 2. Make 100 CV folds to use to compare between statistical approaches
 
-<pre><code> python make_CVs.py -id [ID] 
+<pre><code> python make_CVs.py -id [ID] </code></pre>
 
 
 # 3. Assess the predictive performance of the population structure using the top N principal components 
@@ -62,7 +62,7 @@ BRR: ID - CV_num - trait - path_to_output
 BL: ID - CV_num - lambda - trait - path_to_output
 
 # 6. Run ML using all the features
-python ~shius/codes/qsub_hpc.py -f submit -u azodichr -m 40 -w 230 -p 5 -c run_ML.txt -wd /mnt/home/azodichr/03_GenomicSelection/swgrs_DP_Lipka/08_ML/
+</code></pre>python ~shius/codes/qsub_hpc.py -f submit -u azodichr -m 40 -w 230 -p 5 -c run_ML.txt -wd /mnt/home/azodichr/03_GenomicSelection/swgrs_DP_Lipka/08_ML/</code></pre>
 
 # 7. Running ML after feature selection
 L1: 
