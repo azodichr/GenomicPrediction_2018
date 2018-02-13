@@ -52,7 +52,7 @@ Example qsub file for submitting to HPCC as an array job: /mnt/home/azodichr/03_
 <pre><code> Rscript predict_rrBLUP.R [ID] [cv_num] [trait/all] [path/to/output/dir] </code></pre>
 
 
-# 5. GS using Bayesian methods
+## 5. GS using Bayesian methods
 Using the BGLR R package. Bayesian Methods available: BayesA, BayesB, B-LASSO, and B-Ridge Regression
 Example qsub file for submitting to HPCC as an array job: /mnt/home/azodichr/03_GenomicSelection/qsub_files/qsub_BayA.txt 
 
@@ -63,7 +63,7 @@ BRR: ID - CV_num - trait - path_to_output
 BL: ID - CV_num  - trait - path_to_output
 
 
-# 6. Run ML using all the features
+## 6. Run ML using all the features
 Utilizes the Shiu Lab machine learning pipeline (https://github.com/ShiuLab/ML-Pipeline) implementing ML with SciKit-Learn (http://scikit-learn.org/stable/)
 Algorithms available for regression: RF (random forest), SVM (support vector machine), GB (gradient boosting), and LogReg (logistic regression)
 See Shiu Lab ML-Pipeline repository for environment requirements. If working on MSU's HPCC, the environment is available at:
@@ -74,18 +74,8 @@ Example run:
 Example runcc file: /mnt/home/azodichr/03_GenomicSelection/rice_DP_Spindel/08_ML2/runcc_GS.txt
 $ python ~shius/codes/qsub_hpc.py -f submit -u [username] -m 40 -w 230 -p 7 -c runcc_GS.txt -wd /mnt/home/azodichr/03_GenomicSelection/rice_DP_Spindel/08_ML2
 
-# 7. Running ML after feature selection
-L1: 
-swgr:
-Plant Height = 476
-Standability = 328
-Anthesis_Date = 140 (alpha = 0.0001)
 
-python ~shius/codes/qsub_hpc.py -f submit -u azodichr -m 10 -w 230 -p 7 -c run_relief.txt -wd /mnt/home/azodichr/03_GenomicSelection/swgrs_DP_Lipka/08_ML/
-
-
-
-# MLP 
+## Artifical Neural Networks: MLP 
 python ~/GitHub/TF-GenomicSelection/make_jobs_tf.py job_header.txt test_params.txt
 for i in job*.sh; do qsub $i; done
 
@@ -104,13 +94,19 @@ Output: RESULTS.pdf
 
 
 
-## Formalizing the Feature Selection
-* Before we were breaking a ML rule by doing feature selection on the whole data set. Try a side experiment with FS using BayesA, LASSO, RF, and Relief (top 10, 100, 250, 500, 750, 1000, 1500, 2000). Using cv_1, do fs and build the models on groups 1-4, then test the fs model on group 5.
+# Feature Selection Analysis
+* Before we were breaking a ML rule by doing feature selection on the whole data set. Try a side experiment with FS using BayesA, LASSO, RF, and Relief (top 10, 100, 250, 500, 750, 1000, 1500, 2000). Using cv_1-cv_10, do FS and build the models on groups 1-4, then test the fs model on group 5.
 
 
-Feature selection:
+## 1. RF and Relief
+These FS methods are built into the Shiu Lab's Feature_Selection.py script. I made small changes so that the FS would be done on folds 1-4 of the CV set and changes to the ML_regression.py script allow for it to build the model on that same set and apply it to the cv5. 
 
-BayesA:
+Example run: (Will use RF to do feature selection on height (HT), selecting the top 10 features for the first 10 cv_reps. 
+<code><pre>python ~/GitHub/ML-Pipeline/Feature_Selection.py -df geno.csv -df_class pheno.csv,HT -f RF -sep ',' -n 10 -CVs CVFs.csv -reps 10 -type r -list T -save geno_HT_RF_10</code></pre>
+
+
+## 2. BayesA
+Modified the predict_BayesA.R script to do FS on just cv1-4. 
 Rscript FS_BayesA.R maize_DP_Crossa/
 Rscript FS_BayesA.R swgrs_DP_Lipka/
 Rscript FS_BayesA.R soy_NAM_xavier/
