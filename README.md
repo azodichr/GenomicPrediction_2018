@@ -8,11 +8,15 @@ All scripts for this project on HPCC: /mnt/home/azodichr/GitHub/GenomicPredictio
 Run scripts from a directory that has directories (named with the project ID) for each dataset. Datasets for this project are listed below. Each directory should contain a subdirectory 01_Data that contains the geno.csv and pheno.csv file formatted as described in Step #1. 
 
 Project IDs:
-rice_DP_Spindel
-sorgh_DP_Fernan
-soy_NAM_xavier
-spruce_Dial_beaulieu
-swgrs_DP_Lipka # Still working on genotype data
+-rice_DP_Spindel
+
+-sorgh_DP_Fernan
+
+-soy_NAM_xavier
+
+-spruce_Dial_beaulieu
+
+-swgrs_DP_Lipka # Still working on genotype data
 
 Project_ID/:
   00_RawData/
@@ -27,9 +31,13 @@ Since all input data so far has been slightly different, this needs to be done m
 script: scripts/data_preprocessing.R
 
 Create two files with matching indexes: geno.csv, pheno.csv
+
 -Remove lines missing any phenotypes of interest
+
 -Remove lines with missing genotype information
+
 -Take the average of phenotypes across years and replicates
+
 -Convert genotype data to [-1,0,1] format corresponding to [aa, Aa, AA]
 
 
@@ -41,12 +49,13 @@ Create two files with matching indexes: geno.csv, pheno.csv
 ## 3. Assess the predictive performance of the population structure
 How well can you predict a trait value using just the population structure? These scripts run principle component analysis on the SNP data, then use the top N PCs to predict the trait values.
 
-<pre><code> Rscript getPCs.R [ID]
+<pre><code>Rscript getPCs.R [ID]
 Rscript predict_PC.R [ID] [N]  </code></pre>
 
 
 ## 4. GS using rrBLUP
 Example qsub file for submitting to HPCC as an array job: /mnt/home/azodichr/03_GenomicSelection/qsub_files/qsub_rrBLUP.txt
+
 *Be sure to change the ID to your project ID!
 
 <pre><code> Rscript predict_rrBLUP.R [ID] [cv_num] [trait/all] [path/to/output/dir] </code></pre>
@@ -57,15 +66,21 @@ Using the BGLR R package. Bayesian Methods available: BayesA, BayesB, B-LASSO, a
 Example qsub file for submitting to HPCC as an array job: /mnt/home/azodichr/03_GenomicSelection/qsub_files/qsub_BayA.txt 
 
 <pre><code> Rscript predict_BayesA.R [ID] [cv_num] [optional_parameter] [trait/all] [path/to/output/dir]</code></pre>
-BayesA: ID - CV_num - deg.freedom - trait - path_to_output
-BayesB: ID - CV_num - deg.freedom - trait - path_to_output
-BRR: ID - CV_num - trait - path_to_output
-BL: ID - CV_num  - trait - path_to_output
+
+-BayesA: ID - CV_num - deg.freedom - trait - path_to_output
+
+-BayesB: ID - CV_num - deg.freedom - trait - path_to_output
+
+-BRR: ID - CV_num - trait - path_to_output
+
+-BL: ID - CV_num  - trait - path_to_output
 
 
 ## 6. Run ML using all the features
 Utilizes the Shiu Lab machine learning pipeline (https://github.com/ShiuLab/ML-Pipeline) implementing ML with SciKit-Learn (http://scikit-learn.org/stable/)
+
 Algorithms available for regression: RF (random forest), SVM (support vector machine), GB (gradient boosting), and LogReg (logistic regression)
+
 See Shiu Lab ML-Pipeline repository for environment requirements. If working on MSU's HPCC, the environment is available at:
 <code><pre>export PATH=/mnt/home/azodichr/miniconda3/bin:$PATH</code></pre>
 
@@ -92,21 +107,29 @@ Output: RESULTS.pdf
 
 
 # Grid Search Analysis
-rrBLUP: no parameters to define
-Bayes A: degrees of freedom  (2, **5**, 7, 15)
-Bayes B: degrees of freedom (2, **5**, 7, 15)
-B-LASSO: no parameters to define
-B-RR: no parameters to define
-SVM: Kernel (**linear**, polynomial, rbf), C (0.01, 0.1, 0.5, 1, 10, 50, 100), gamma (10, 1, 0.1, **0.01**, 0.001, 0.0001, 0.00001)
-RF: Max Depth (3, **5**, 10, 50), Max Features (10%, 50%, 100%, **sqrt(#feat)**, log2(#feat))
-GB: Learning Rate (0.0001, 0.001, **0.01**, 0.1, 1), Max Depth (3, **5**, 10, 50), Max Features (10%, 50%, 100%, **sqrt(#feat)**, log2(#feat))
-ANN: Activation function (**ReLU**, sigmoid), Number of hidden layers (**1**, 2, 3), Largest Node Size (10, **100**, 1000), Regularization (l1, **l2**, both)
+-rrBLUP: no parameters to define
+
+-Bayes A: degrees of freedom  (2, **5**, 7, 15)
+
+-Bayes B: degrees of freedom (2, **5**, 7, 15)
+
+-B-LASSO: no parameters to define
+
+-B-RR: no parameters to define
+
+-SVM: Kernel (**linear**, polynomial, rbf), C (0.01, 0.1, 0.5, 1, 10, 50, 100), gamma (10, 1, 0.1, **0.01**, 0.001, 0.0001, 0.00001)
+
+-RF: Max Depth (3, **5**, 10, 50), Max Features (10%, 50%, 100%, **sqrt(#feat)**, log2(#feat))
+
+-GB: Learning Rate (0.0001, 0.001, **0.01**, 0.1, 1), Max Depth (3, **5**, 10, 50), Max Features (10%, 50%, 100%, **sqrt(#feat)**, log2(#feat))
+
+-ANN: Activation function (**ReLU**, sigmoid), Number of hidden layers (**1**, 2, 3), Largest Node Size (10, **100**, 1000), Regularization (l1, **l2**, both)
 
 
 
 
 # Feature Selection Analysis
-* Before we were breaking a ML rule by doing feature selection on the whole data set. Try a side experiment with FS using BayesA, LASSO, RF, and Relief (top 10, 100, 250, 500, 750, 1000, 1500, 2000). Using cv_1-cv_10, do FS and build the models on groups 1-4, then test the fs model on group 5.
+Before we were breaking a ML rule by doing feature selection on the whole data set. Try a side experiment with FS using BayesA, LASSO, RF, and Relief (top 10, 100, 250, 500, 750, 1000, 1500, 2000). Using cv_1-cv_10, do FS and build the models on groups 1-4, then test the fs model on group 5.
 
 
 ## 1. RF and Relief
