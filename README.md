@@ -80,7 +80,7 @@ python ~/GitHub/TF-GenomicSelection/make_jobs_tf.py job_header.txt test_params.t
 for i in job*.sh; do qsub $i; done
 
 
-#### Getting results 
+# Getting results 
 
 Get the average accuracies: ** modify line 14 to include the results you are interested in
 $ python pull_results.py
@@ -90,6 +90,17 @@ Plots the results pulled above!
 $ Rscript plot_results.R
 Output: RESULTS.pdf
 
+
+# Grid Search Analysis
+rrBLUP: no parameters to define
+Bayes A: degrees of freedom  (2, **5**, 7, 15)
+Bayes B: degrees of freedom (2, **5**, 7, 15)
+B-LASSO: no parameters to define
+B-RR: no parameters to define
+SVM: Kernel (**linear**, polynomial, rbf), C (0.01, 0.1, 0.5, 1, 10, 50, 100), gamma (10, 1, 0.1, **0.01**, 0.001, 0.0001, 0.00001)
+RF: Max Depth (3, **5**, 10, 50), Max Features (10%, 50%, 100%, **sqrt(#feat)**, log2(#feat))
+GB: Learning Rate (0.0001, 0.001, **0.01**, 0.1, 1), Max Depth (3, **5**, 10, 50), Max Features (10%, 50%, 100%, **sqrt(#feat)**, log2(#feat))
+ANN: Activation function (**ReLU**, sigmoid), Number of hidden layers (**1**, 2, 3), Largest Node Size (10, **100**, 1000), Regularization (l1, **l2**, both)
 
 
 
@@ -102,7 +113,8 @@ Output: RESULTS.pdf
 These FS methods are built into the Shiu Lab's Feature_Selection.py script. I made small changes so that the FS would be done on folds 1-4 of the CV set and changes to the ML_regression.py script allow for it to build the model on that same set and apply it to the cv5. 
 
 Example run: (Will use RF to do feature selection on height (HT), selecting the top 10 features for the first 10 cv_reps. 
-<code><pre>python ~/GitHub/ML-Pipeline/Feature_Selection.py -df geno.csv -df_class pheno.csv,HT -f RF -sep ',' -n 10 -CVs CVFs.csv -reps 10 -type r -list T -save geno_HT_RF_10</code></pre>
+<code><pre>python ~/GitHub/ML-Pipeline/Feature_Selection.py -df geno.csv -df_class pheno.csv,HT -f RF -sep ',' -n 10 -CVs CVFs.csv -reps 10 -type r -list T -save geno_HT_RF_10
+python ~shius/codes/qsub_hpc.py -f submit -u azodichr -c runcc_FS_RF_Relief.txt -w 239 -m 10 -wd /mnt/home/azodichr/03_GenomicSelection/sorgh_DP_Fernan/01_Data</code></pre>
 
 
 ## 2. BayesA
@@ -112,22 +124,6 @@ Rscript FS_BayesA.R swgrs_DP_Lipka/
 Rscript FS_BayesA.R soy_NAM_xavier/
 
 
-RandomForest:
-See run files: 01_RF/run_FS_RF.txt
-Example:
-$ python ~/GitHub/ML-Pipeline/Feature_Selection.py -f RF -df ../geno.csv -df_class ../pheno_cv1_NAs.txt,height -n 1500 -type r -ignore '?' -sep ',' -list T -save soy_height_RF_1500
-
-
-LASSO:
-python ~/GitHub/ML-Pipeline/Feature_Selection.py -f LASSO -df ~/03_GenomicSelection/02_FeatureSelection/maize_DP_Crossa/geno.csv -df_class ~/03_GenomicSelection/02_FeatureSelection/maize_DP_Crossa/pheno_cv1_NAs.txt,GY -sep ',' -list T -type r -ignore '?' -p 0.01
-python ~/GitHub/ML-Pipeline/Feature_Selection.py -f LASSO -df ~/03_GenomicSelection/02_FeatureSelection/swgrs_DP_Lipka/geno.csv -df_class ~/03_GenomicSelection/02_FeatureSelection/swgrs_DP_Lipka/pheno_cv1_NAs.csv,Plant_Height -sep ',' -list T -type r -ignore '?' -p 0.45
-python ~/GitHub/ML-Pipeline/Feature_Selection.py -f LASSO -df ~/03_GenomicSelection/02_FeatureSelection/soy_NAM_xavier/geno.csv -df_class ~/03_GenomicSelection/02_FeatureSelection/soy_NAM_xavier/pheno_cv1_NAs.txt,height -sep ',' -list T -type r -ignore '?' -p 1.03
-
-
-Relief:
-python ~shius/codes/qsub_hpc.py -f submit -u azodichr -c run_FS_relief.txt -w 20 -m 50 -wd /mnt/home/azodichr/03_GenomicSelection/02_FeatureSelection/maize_DP_Crossa/03_relief/
-python ~shius/codes/qsub_hpc.py -f submit -u azodichr -c run_FS_relief.txt -w 20 -m 50 -wd /mnt/home/azodichr/03_GenomicSelection/02_FeatureSelection/swgrs_DP_Lipka/03_relief/
-python ~shius/codes/qsub_hpc.py -f submit -u azodichr -c run_FS_relief.txt -w 230 -m 80 -wd /mnt/home/azodichr/03_GenomicSelection/02_FeatureSelection/soy_NAM_xavier/03_relief/
 
 
 
@@ -231,4 +227,33 @@ cat maize_DP_Crossa/topOvlp_0.2.txt rice_DP_Spindel/topOvlp_0.2.txt soy_NAM_xavi
 Rscript -e "install.packages('rrBLUP', lib='~/R/library', contriburl=contrib.url('http://cran.r-project.org/'))"
 
 
+
+
+
+# Old instructions
+
+## Feature selection test
+## 2. BayesA
+Modified the predict_BayesA.R script to do FS on just cv1-4. 
+Rscript FS_BayesA.R maize_DP_Crossa/
+Rscript FS_BayesA.R swgrs_DP_Lipka/
+Rscript FS_BayesA.R soy_NAM_xavier/
+
+
+RandomForest:
+See run files: 01_RF/run_FS_RF.txt
+Example:
+$ python ~/GitHub/ML-Pipeline/Feature_Selection.py -f RF -df ../geno.csv -df_class ../pheno_cv1_NAs.txt,height -n 1500 -type r -ignore '?' -sep ',' -list T -save soy_height_RF_1500
+
+
+LASSO:
+python ~/GitHub/ML-Pipeline/Feature_Selection.py -f LASSO -df ~/03_GenomicSelection/02_FeatureSelection/maize_DP_Crossa/geno.csv -df_class ~/03_GenomicSelection/02_FeatureSelection/maize_DP_Crossa/pheno_cv1_NAs.txt,GY -sep ',' -list T -type r -ignore '?' -p 0.01
+python ~/GitHub/ML-Pipeline/Feature_Selection.py -f LASSO -df ~/03_GenomicSelection/02_FeatureSelection/swgrs_DP_Lipka/geno.csv -df_class ~/03_GenomicSelection/02_FeatureSelection/swgrs_DP_Lipka/pheno_cv1_NAs.csv,Plant_Height -sep ',' -list T -type r -ignore '?' -p 0.45
+python ~/GitHub/ML-Pipeline/Feature_Selection.py -f LASSO -df ~/03_GenomicSelection/02_FeatureSelection/soy_NAM_xavier/geno.csv -df_class ~/03_GenomicSelection/02_FeatureSelection/soy_NAM_xavier/pheno_cv1_NAs.txt,height -sep ',' -list T -type r -ignore '?' -p 1.03
+
+
+Relief:
+python ~shius/codes/qsub_hpc.py -f submit -u azodichr -c run_FS_relief.txt -w 20 -m 50 -wd /mnt/home/azodichr/03_GenomicSelection/02_FeatureSelection/maize_DP_Crossa/03_relief/
+python ~shius/codes/qsub_hpc.py -f submit -u azodichr -c run_FS_relief.txt -w 20 -m 50 -wd /mnt/home/azodichr/03_GenomicSelection/02_FeatureSelection/swgrs_DP_Lipka/03_relief/
+python ~shius/codes/qsub_hpc.py -f submit -u azodichr -c run_FS_relief.txt -w 230 -m 80 -wd /mnt/home/azodichr/03_GenomicSelection/02_FeatureSelection/soy_NAM_xavier/03_relief/
 
