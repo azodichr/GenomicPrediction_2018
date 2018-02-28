@@ -4,6 +4,7 @@
 # Arguments: [1] id (i.e. wheat_599_CIMMYT)
 #            [2] JobNum (use PSB JobArray)
 #            [3] Number of PCs to use (default = 5)
+#            [4] Output directory
 #
 #
 # Written by: Christina Azodi
@@ -21,23 +22,28 @@ if (length(args)==0) {
 } else if (length(args)==2) {
   # default output file
   args[3] <- 5
+  args[4] <- "/mnt/home/azodichr/03_GenomicSelection/"
 }
 
 id = args[1]
 jobNum = as.numeric(args[2])
-pc.num = args[2]
+pc.num = args[3]
+save_dir = args[4]
 
 ## load the phenotypes and PCs
-setwd(paste("/mnt/home/azodichr/03_GenomicSelection/", id, '/02_PC/', sep=''))
-#setwd('~/Desktop/Genomic_Selection/GS_Datasets/wheat_599_CIMMYT/02_PC/')
+setwd(paste("/mnt/home/azodichr/03_GenomicSelection/", id, sep=''))
+Y <- read.csv('01_Data/pheno.csv', row.names=1)
+load('/02_PC/00_getPC/EVD.RData')
+cvs <- read.csv('01_Data/CVFs.csv', row.names=1)
 
-Y <- read.csv('../01_Data/pheno.csv', row.names=1)
-load('00_getPC/EVD.RData')
-cvs <- read.csv('../01_Data/CVFs.csv', row.names=1)
+# Make output directory
+setwd(save_dir)
+dir.create(id)
+setwd(id)
+dir.create(paste('02_PC_', pc.num, sep=''))
+setwd(paste('02_PC_', pc.num, sep=''))
 
 PC <- EVD$vectors[,1:pc.num]
-dir.create(paste('Top_',pc.num,'_PCs', sep=''))
-setwd(paste('Top_',pc.num,'_PCs', sep=''))
 
 for (j in 1:101){
   jobNum <- j
@@ -91,3 +97,5 @@ for (j in 1:101){
     setwd('../')
   }
 }
+
+print('Complete')

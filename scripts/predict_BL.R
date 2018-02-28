@@ -52,8 +52,8 @@ X=scale(X)
 setwd(save_dir)
 dir.create(id)
 setwd(id)
-dir.create(paste('07_BL_lam_', lambda, sep=''))
-setwd(paste('07_BL_lam_', lambda, sep=''))
+dir.create('07_BL')
+setwd('07_BL')
 
 for(i in 1:length(Y)){
   print(paste('trait =',names(Y)[i]))
@@ -97,3 +97,4 @@ for(i in 1:length(Y)){
   setwd('../')
 }
 
+print('Complete')
