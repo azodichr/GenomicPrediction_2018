@@ -176,6 +176,11 @@ def main():
 		fs_cv_file, fs_cv_num = fs_cv.strip().split(',')
 		fs_cv_df = pd.read_csv(fs_cv_file, sep=SEP, index_col = 0)
 		print(fs_cv_df.head())
+		train_set = fs_cv_df.index[fs_cv_df['cv_' + str(fs_cv_num)] != 5].tolist()
+		test_set = fs_cv_df.index[fs_cv_df['cv_' + str(fs_cv_num)] == 5].tolist()
+		
+		print(train_set)
+		print(test_set)
 		exit()
 		
 		
