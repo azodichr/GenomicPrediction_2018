@@ -2,9 +2,8 @@
 # Make phenotype predictions using PCs
 #
 # Arguments: [1] id (i.e. wheat_599_CIMMYT)
-#            [2] JobNum (use PSB JobArray)
-#            [3] Number of PCs to use (default = 5)
-#            [4] Output directory
+#            [2] Number of PCs to use (default = 5)
+#            [3] Output directory
 #
 #
 # Written by: Christina Azodi
@@ -21,14 +20,13 @@ if (length(args)==0) {
   stop("Need at least one argument (ID)", call.=FALSE)
 } else if (length(args)==2) {
   # default output file
-  args[3] <- 5
-  args[4] <- "/mnt/home/azodichr/03_GenomicSelection/"
+  args[2] <- 5
+  args[3] <- "/mnt/home/azodichr/03_GenomicSelection/"
 }
 
 id = args[1]
-jobNum = as.numeric(args[2])
-pc.num = args[3]
-save_dir = args[4]
+pc.num = args[2]
+save_dir = args[3]
 
 ## load the phenotypes and PCs
 setwd(paste("/mnt/home/azodichr/03_GenomicSelection/", id, sep=''))
