@@ -54,7 +54,7 @@ def main():
 	
 	# Default code parameters
 	n, FEAT, apply, n_jobs, Y_col, plots, cv_num, TAG, SAVE, short_scores = 100, 'all','F', 1, 'Y', 'False', 10, '', '', ''
-	y_name, SEP, THRSHD_test, DF_Y, df_unknowns,UNKNOWN, normX, normY, cv_reps, cv_sets, fs_cv = 'Y', '\t','F1', 'ignore', 'none','unk', 'F', 'F', 10, 'none', 'pass
+	y_name, SEP, THRSHD_test, DF_Y, df_unknowns,UNKNOWN, normX, normY, cv_reps, cv_sets, fs_cv = 'Y', '\t','F1', 'ignore', 'none','unk', 'F', 'F', 10, 'none', 'pass'
 
 	# Default parameters for Grid search
 	GS, gs_score = 'F', 'neg_mean_squared_error'
