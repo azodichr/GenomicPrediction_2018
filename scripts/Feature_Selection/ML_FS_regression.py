@@ -54,7 +54,7 @@ def main():
 	
 	# Default code parameters
 	n, FEAT, apply, n_jobs, Y_col, plots, cv_num, TAG, SAVE, short_scores = 100, 'all','F', 1, 'Y', 'False', 10, '', '', ''
-	y_name, SEP, THRSHD_test, DF_Y, df_unknowns,UNKNOWN, normX, normY, cv_reps, cv_sets = 'Y', '\t','F1', 'ignore', 'none','unk', 'F', 'F', 10, 'none'
+	y_name, SEP, THRSHD_test, DF_Y, df_unknowns,UNKNOWN, normX, normY, cv_reps, cv_sets, fs_cv = 'Y', '\t','F1', 'ignore', 'none','unk', 'F', 'F', 10, 'none', 'pass
 
 	# Default parameters for Grid search
 	GS, gs_score = 'F', 'neg_mean_squared_error'
@@ -118,6 +118,8 @@ def main():
 			THRSHD_test = sys.argv[i+1]
 		elif sys.argv[i] == "-n_jobs" or sys.argv[i] == "-p":
 			n_jobs = int(sys.argv[i+1])
+		elif sys.argv[i] == "-FS_cv":
+			fs_cv = sys.argv[i+1]
 		elif sys.argv[i] == "-short":
 			scores_len = sys.argv[i+1]
 			if scores_len.lower() == "true" or scores_len.lower() == "t":
@@ -170,7 +172,13 @@ def main():
 		predictions = pd.DataFrame(data=df['Y'], index=df.index, columns=['Y'])
 		print("Model built using %i instances" % len(df.index))
 
-	
+	if fs_cv not == "pass":
+		fs_cv_file, fs_cv_num = fs_cv.strip().split(',')
+		fs_cv_df = pd.read_csv(fs_cv_file, sep=SEP, index_col = 0)
+		print(fs_cv_df.head())
+		exit()
+		
+		
 	if SAVE == "":
 		if TAG == "":
 			SAVE = DF + "_" + ALG
