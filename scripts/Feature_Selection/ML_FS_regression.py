@@ -172,7 +172,7 @@ def main():
 		predictions = pd.DataFrame(data=df['Y'], index=df.index, columns=['Y'])
 		print("Model built using %i instances" % len(df.index))
 
-	if fs_cv not == "pass":
+	if fs_cv != "pass":
 		fs_cv_file, fs_cv_num = fs_cv.strip().split(',')
 		fs_cv_df = pd.read_csv(fs_cv_file, sep=SEP, index_col = 0)
 		print(fs_cv_df.head())
