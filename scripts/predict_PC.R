@@ -33,7 +33,7 @@ save_dir = args[4]
 ## load the phenotypes and PCs
 setwd(paste("/mnt/home/azodichr/03_GenomicSelection/", id, sep=''))
 Y <- read.csv('01_Data/pheno.csv', row.names=1)
-load('/02_PC/00_getPC/EVD.RData')
+load('02_PC/00_getPC/EVD.RData')
 cvs <- read.csv('01_Data/CVFs.csv', row.names=1)
 
 # Make output directory
