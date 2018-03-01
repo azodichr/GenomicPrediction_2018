@@ -179,10 +179,6 @@ def main():
 		train_set = fs_cv_df.index[fs_cv_df['cv_' + str(fs_cv_num)] != 5].tolist()
 		test_set = fs_cv_df.index[fs_cv_df['cv_' + str(fs_cv_num)] == 5].tolist()
 		
-		print(train_set)
-		print(test_set)
-		exit()
-		
 		
 	if SAVE == "":
 		if TAG == "":
@@ -216,7 +212,10 @@ def main():
 		start_time = time.time()
 		print("\n\n===>  Grid search started  <===") 
 		
-		params2use = ML.fun.RegGridSearch(df, SAVE, ALG, gs_score, cv_num, n_jobs)
+		df_gridsearch = df.iloc[train_set,:]
+		print(df_gridsearch.head())
+		
+		params2use = ML.fun.RegGridSearch(df_gridsearch, SAVE, ALG, gs_score, cv_num, n_jobs)
 		
 		print("Parameters selected:")
 		for key,val in params2use.items():
