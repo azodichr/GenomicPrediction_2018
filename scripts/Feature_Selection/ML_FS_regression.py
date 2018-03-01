@@ -212,7 +212,7 @@ def main():
 		start_time = time.time()
 		print("\n\n===>  Grid search started  <===") 
 		
-		df_gridsearch = df.iloc[train_set,:]
+		df_gridsearch = df.loc[train_set,:]
 		print(df_gridsearch.head())
 		
 		params2use = ML.fun.RegGridSearch(df_gridsearch, SAVE, ALG, gs_score, cv_num, n_jobs)
