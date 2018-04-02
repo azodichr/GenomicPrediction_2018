@@ -146,6 +146,7 @@ Rscript FS_BayesA.R maize_DP_Crossa/
 Rscript FS_BayesA.R swgrs_DP_Lipka/
 Rscript FS_BayesA.R soy_NAM_xavier/
 
+python ~shius/codes/qsub_hpc.py -f submit -u zhan1165 -w 239 -m 40 -wd /mnt/home/zhan1165/azodi/maize/01_Data/ -c runcc_bayesAFS.txt
 
 
 
